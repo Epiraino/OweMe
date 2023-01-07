@@ -3,11 +3,11 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="-39.5" y="-14.5">com.example.oweme.models.User</node>
+    <node x="-1198.5" y="-259.5">com.example.oweme.models.User</node>
   </nodes>
   <notes />
   <edges />
-  <settings layout="Hierarchic Compact" zoom="1.0" showDependencies="false" x="463.5" y="23.5" />
+  <settings layout="Hierarchic Compact" zoom="1.0" showDependencies="false" x="0.0" y="0.0" />
   <SelectedNodes>
     <node>com.example.oweme.models.User</node>
   </SelectedNodes>

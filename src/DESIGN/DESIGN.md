@@ -1,84 +1,159 @@
 Emilio Piraino Design Document
 
 OweMe Design
-1. Problem Statement
-   People who want to borrow or lend money but want to know the personal lending history of the user that wants to borrow
+1. Problem Statement:
 
-2. Top Questions to Resolve in Review
-    What would the user profile look like?
-    How would we calculate the social credit score?
+   To create an application that allows people to track loans given out to friends and to rate the lender based on 
+   paying back on time, creating a social credit score.
 
-3. Use Cases
+2. Top Questions to Resolve in Review:
 
-U1. As a [product] customer, I want to have a profile that displays my Social Credit Score.
+* How will users be able to add loans and view their loan history?
+  * How will the rating system work and how will it affect a user's social credit score?
+  * How will users be able to search for other users and view their ratings?
+  * How will the application handle disputes or errors in ratings or loan information?
+  * What measures will be in place to protect user privacy?
 
-U2. As a [product] customer, I want to know the Social Credit Score of the user that is requesting a loan.
+3. Use Cases:
 
-U3. As a [product] customer, I want to know if the Lendee has not repaid a previous loan or has late payments.
+   * U1. As a user, I want to be able to add a new loan, including the amount, borrower, and due date.
+   * U2. As a user, I want to be able to view my loan history, including completed and outstanding loans.
+   * U3. As a user, I want to be able to rate a borrower based on their punctuality in paying back a loan.
+   * U4. As a user, I want to be able to view the ratings and social credit score of other users.
+   * U5. As a user, I want to be able to dispute a rating or report an error in loan information.
 
-U4. As a [product] customer, I want to be able to look up another user, in case the person is verbally requesting a loan
+4. Project Scope:
 
+The scope of the project is to create an application that allows users to track loans given to friends, rate borrowers 
+based on their punctuality, and view the ratings and social credit scores of other users. Users will also be able to 
+search for other users and view their ratings. The application will handle disputes and errors in ratings and loan 
+information. Measures will be in place to protect user privacy.
 
+4.1 In Scope:
 
-4. Project Scope
+This design will cover U1-U5 and the project scope.
 
-4.1. In Scope
+4.2. Out of Scope:
 
-- Creating, retrieving, updating, and deleting an account.
-- Requesting Loan
+The ability to request loans from other users.
+Integration with financial institutions or credit agencies.
+Proposed Architecture Overview:
 
-4.2. Out of Scope
-- In App monetary transactions.
-- Social vs Traditional Credit Score comparator
+* The Oweme application will have a front-end client built with a JavaScript framework (such as React) and a 
+  back-end API built with a server-side language (java). The API will be responsible for handling requests from the 
+  client, interacting with the database, and performing authentication and authorization using Auth0.
 
-5. Proposed Architecture Overview
-   Describe broadly how you are proposing to solve for the requirements you described in Section 3.
+* The API will have a number of endpoints for creating and retrieving loans, ratings, and user information. The database
+will store user profiles, loans, and ratings.
 
-This may include class diagram(s) showing what components you are planning to build.
+* The client will make requests to the API to retrieve and manipulate data, and will display the data to the user in a 
+user-friendly interface. The client will also handle the login flow and obtain access tokens using the Auth0 SDK.
 
-You should argue why this architecture (organization of components) is reasonable. That is, why it represents a good data flow and a good separation of concerns. Where applicable, argue why this architecture satisfies the stated requirements.
+API:
 
-6. API
-   6.1. Public Models
+6.1. Public Models:
 
-   // User
-   String userId;
-   String username;
-   String hashedPassword;
-   String salt;
-   String email;
-   String phoneNumber;
-   String birthDate;
-   Boolean isEmailVerified;
-   Boolean isPhoneVerified;
-   int SocialCreditScore;
-   int latePayments;
-   int numberOfLoans;
-   List< Transaction > transactionList;
+User Model:
 
-   
-6.2. First Endpoint
-Describe the behavior of the first endpoint you will build into your service API. This should include what data it requires, what data it returns, and how it will handle any known failure cases. You should also include a sequence diagram showing how a user interaction goes from user to website to service to database, and back. This first endpoint can serve as a template for subsequent endpoints. (If there is a significant difference on a subsequent endpoint, review that with your team before building it!)
+* user_id: The ID of the user (string)
+* name: The name of the user (string)
+* email: The email address of the user (string)
+* social_credit_score: The user's social credit score (integer)
+* loans: An array of the user's loans (Loan model)
 
-(You should have a separate section for each of the endpoints you are expecting to build...)
+Loan Model:
+* loan_id: The ID of the loan (string)
+* borrower_id: The ID of the borrower (string)
+* borrower_name: The name of the borrower (string)
+* amount: The loan amount (integer)
+* due_date: The due date of the loan (string)
+* paid: A boolean indicating whether the loan has been paid (boolean)
+* ratings: An array of ratings for the loan (Rating model)
 
-6.3 Second Endpoint
-(repeat, but you can use shorthand here, indicating what is different, likely primarily the data in/out and error conditions. If the sequence diagram is nearly identical, you can say in a few words how it is the same/different from the first endpoint)
+Rating Model:
+* loan_id: The ID of the loan (string)
+* user_id: The ID of the user who left the rating (string)
+* user_name: The name of the user who left the rating (string)
+* rating: The rating (integer)
+* comment: An optional comment (string)
 
-7. Tables
-   userId // partition key, string
-   userName // string
-   hashedPassword // string
-   salt // string
-   email // string
-   phoneNumber // string
-   birthData // string
-   isEmailVerified // boolean
-   isNumberVerified // boolean
-   SocialCreditScore // int
-   latePayments // int
-   numberOfLoans // int
-   transactionList // List< Transaction >
+These models represent the data that will be returned by the API when a user retrieves their profile information or 
+views the details of a loan. The User model includes an array of the user's loans, each represented by a Loan model. 
+The Loan model includes an array of ratings, each represented by a Rating model.
 
-8. Pages
-   Include mock-ups of the web pages you expect to build. These can be as sophisticated as mockups/wireframes using drawing software, or as simple as hand-drawn pictures that represent the key customer-facing components of the pages. It should be clear what the interactions will be on the page, especially where customers enter and submit data. You may want to accompany the mockups with some description of behaviors of the page (e.g. “When customer submits the submit-dog-photo button, the customer is sent to the doggie detail page”)
+6.2 Endpoint 1: /users/me
+
+* Method: GET
+  * Description: Retrieves the authenticated user's profile information and loan history.
+  * Request Body: None
+  * Response:
+  * 200: Returns the user's profile information and loan history.
+  * 401: Unauthorized. The user is not authenticated.
+
+6.3 Endpoint 2: /loans
+
+* Method: POST
+  * Description: Creates a new loan for the authenticated user.
+  * Request Body:
+  * borrower_id: The ID of the borrower (string)
+  * amount: The loan amount (integer)
+  * due_date: The due date of the loan (string)
+  * Response:
+  * 201: The loan was created successfully.
+  * 400: Bad request. The request body is missing required parameters or contains invalid values.
+  * 401: Unauthorized. The user is not authenticated.
+
+6.4 Endpoint 3: /loans/{loan_id}
+
+* Method: PUT
+  * Description: Updates the status of a loan (paid or unpaid).
+  * Request Body:
+  * paid: The status of the loan (boolean)
+  * Response:
+  * 200: The loan was updated successfully.
+  * 401: Unauthorized. The user is not authenticated.
+  * 404: Not found. The loan with the specified ID does not exist.
+  
+6.5 Endpoint 4: /ratings
+
+* Method: POST
+  * Description: Creates a new rating for a loan.
+  * Request Body:
+  * loan_id: The ID of the loan (string)
+  * rating: The rating (integer)
+  * comment: An optional comment (string)
+  * Response:
+  * 201: The rating was created successfully.
+  * 400: Bad request. The request body is missing required parameters or contains invalid values.
+  * 401: Unauthorized. The user is not authenticated.
+  * 404: Not found. The loan with the specified ID does not exist.
+
+7. Tables:
+
+Users Table:
+Primary Key: user_id (string)
+Other Attributes: name (string), email (string), password (string), social_credit_score (integer)
+
+Loans Table:
+Primary Key: loan_id (string)
+Sort Key: user_id (string)
+Other Attributes: borrower_id (string), amount (integer), due_date (string), paid (boolean)
+
+Ratings Table:
+Primary Key: loan_id (string)
+Sort Key: user_id (string)
+Other Attributes: rating (integer), comment (string)
+This table structure allows you to store all the loans for a particular user by using the user_id as the sort key for 
+the Loans table. The Ratings table is linked to the Loans table using the loan_id as the primary key. This allows you to
+store multiple ratings for a single loan and retrieve them easily using the loan_id.
+
+Pages:
+[Insert mockups of the web pages, including any descriptions of behaviors and interactions]
+
+TODO
+
+1. Create an Auth0 account and set up a new application. This will give you a domain, client ID, and client secret.
+2. Integrate the Auth0 SDK into your application. You can use the SDK to handle the login flow and obtain access tokens for making authenticated requests to your API.
+3. Set up rules in Auth0 to customize the behavior of the authentication flow. For example, you can create a rule that automatically creates a new user in your application's database when they log in for the first time.
+4. Use the access tokens obtained from Auth0 to authenticate requests to your API. You can validate the tokens using the Auth0 SDK or by calling the Auth0 API to verify the token's signature and claim set.
+5. Store user-specific information (such as their loan history and ratings) in your own database, rather than in Auth0. You can link this information to the user's Auth0 user ID, which is included in the access token.
