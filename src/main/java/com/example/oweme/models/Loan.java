@@ -10,6 +10,7 @@ public class Loan {
     private String dueDate;
     private boolean paid;
     private List<Rating> ratings;
+    private String status;
 
     // constructor, getters, and setters
 }
