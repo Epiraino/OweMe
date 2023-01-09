@@ -4,27 +4,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class Rating {
-    private String id;
+
     private String lenderId;
     private String borrowerId;
+    private String loanId;
     private int rating;
     private int numLoans;
     private int totalAmount;
     private int weight;
 
-    public static int calculateSocialCreditScore(List<Rating> ratings) {
-        int totalRatingValue = 0;
-        int totalWeight = 0;
-
-        for (Rating rating : ratings) {
-            int ratingValue = getRatingValue(rating.getRating());
-            int weight = rating.getWeight();
-            totalRatingValue += ratingValue * weight;
-            totalWeight += weight;
-        }
-
-        return totalRatingValue / totalWeight;
-    }
 
     private static int getRatingValue(String rating) {
         switch (rating) {
@@ -41,10 +29,10 @@ public class Rating {
 //
     // getters and setters
 
-    public Rating(String loanId, String userId, String userName, int rating, String comment) {
+    public Rating(String loanId, String borrowerId, int rating, String comment) {
         this.loanId = loanId;
         this.userId = userId;
-        this.userName = userName;
+        this. = userName;
         this.rating = rating;
         this.comment = comment;
     }
@@ -88,11 +76,30 @@ public class Rating {
     public void setComment(String comment) {
         this.comment = comment;
     }
-    private static int getWeight(int numLoans, int totalAmount) {
-        // assign more weight to loans with higher amounts or more loans in total
+    private int getWeight(int amount, int daysOutstanding) {
+        int amountBasedWeight = 1;
+        if (amount >= 500 && amount < 1000) {
+            amountBasedWeight = 2;
+        } else if (amount >= 1000) {
+            amountBasedWeight = 3;
+        }
 
-        return numLoans * totalAmount;
+
+        int timeBasedWeight = 1;
+        if (daysOutstanding >= 30 && daysOutstanding < 60) {
+            timeBasedWeight = 2;
+        } else if (daysOutstanding >= 60 && daysOutstanding < 90) {
+            timeBasedWeight = 3;
+        } else if (daysOutstanding >= 90) {
+            timeBasedWeight = 4;
+        }
+
+        return amountBasedWeight + numLoansBasedWeight + timeBasedWeight;
     }
+
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

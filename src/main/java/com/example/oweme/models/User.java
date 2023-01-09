@@ -13,19 +13,31 @@ public class User {
     public void calculateSocialCreditScore() {
         this.socialCreditScore = Rating.calculateSocialCreditScore(ratings);
     }
+
     private int getRatingValue(String rating) {
         switch (rating) {
-            case "excellent": return 5;
-            case "good": return 4;
-            case "average": return 3;
-            case "poor": return 2;
-            case "very poor": return 1;
+            case "excellent": return RatingValue.EXCELLENT.getValue();
+            case "good": return RatingValue.GOOD.getValue();
+            case "average": return RatingValue.AVERAGE.getValue();
+            case "poor": return RatingValue.POOR.getValue();
+            case "very poor": return RatingValue.VERY_POOR.getValue();
             default: return 0;
         }
     }
 
-    private int getWeight(int numLoans, int totalAmount) {
-        // assign more weight
+    public static int calculateSocialCreditScore(List<Rating> ratings) {
+        int totalRatingValue = 0;
+        int totalWeight = 0;
 
-        // constructor, getters, and setters
+        for (Rating rating : ratings) {
+            int ratingValue = rating.getRating();
+            int weight = rating.getWeight();
+            totalRatingValue += ratingValue * weight;
+            totalWeight += weight;
+        }
+
+        return totalRatingValue / totalWeight;
+    }
+
+
 }

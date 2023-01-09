@@ -16,7 +16,7 @@ public class LoanService {
 
     public Loan createLoan(LoanRequest request) {
         // create a new loan for the authenticated user
-        Loan loan = new Loan(getCurrentUserId(), request.getBorrowerId(), request.getAmount(), request.getDueDate());
+        Loan loan = Loan.createLoan(getCurrentUserId(), request.getBorrowerId(), request.getAmount(), request.getDueDate());
         return loanRepository.save(loan);
     }
 

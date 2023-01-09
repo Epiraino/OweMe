@@ -45,4 +45,10 @@ Emilio V Piraino II
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
+### Monetization
+1. Charge a subscription fee: You could offer a basic version of the app for free and charge a monthly or annual subscription fee for premium features, such as the ability to see detailed loan history or access to credit ratings of other users.
+2. Offer in-app purchases: You could allow users to purchase additional credits or features within the app, such as the ability to request a higher loan amount or see detailed credit ratings of other users.
+3. Sell advertising space: You could allow businesses to advertise their products or services on your app, either through banner ads or sponsored content.
+4. Offer data to third parties: If you are able to collect a large amount of data on user loan behavior, you could potentially sell this data to third parties, such as financial institutions or credit rating agencies.
+5. Offer a credit score improvement service: You could offer a service to help users improve their credit score by offering tips and tools for paying off loans and improving creditworthiness.
 
